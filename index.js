@@ -9,19 +9,18 @@ app.use(express.json());
 const ONE_SIGNAL_APP_ID = '3df8abfb-174c-4e02-9d80-5f7e54ab76e4';
 const ONE_SIGNAL_API_KEY = 'os_v2_app_hx4kx6yxjrhafhmal57fjk3w4rrqv24lbjmel3fnaodxdpphgjqbncnwj7zvrdvuznos5zjs2gdcm7ogzlkp6im6ppr2cbjw5if4iaq';
 
+// 🎯 Send notification directly to specific device
 app.post('/schedule-notification', async (req, res) => {
-  const { meetingTitle, meetingTime } = req.body;
-  console.log("🔔 Incoming request:", req.body);
+  const { meetingTitle, meetingTime, playerId } = req.body;
 
-  const scheduleTime = new Date(meetingTime - 2 * 60 * 60 * 1000).toISOString();
-  console.log("⏰ Scheduling for:", scheduleTime);
+  const scheduleTime = new Date(meetingTime - 2 * 60 * 60 * 1000).toISOString(); // قبل ساعتين
 
   const notification = {
     app_id: ONE_SIGNAL_APP_ID,
     headings: { en: 'Meeting Reminder' },
     contents: { en: `Your meeting "${meetingTitle}" starts in 2 hours` },
-    included_segments: ['Subscribed Users'],
-    send_after: scheduleTime,
+    include_player_ids: [playerId],
+    send_after: scheduleTime
   };
 
   try {
